@@ -62,6 +62,7 @@ export default {
           total: this.calcularTotal,
         };
         this.userStore.agregarPedido(pedido);
+        this.eliminarProductos();
         this.$router.push({ name: "misPedidos" });
       } else {
         const Toast = this.$swal.mixin({

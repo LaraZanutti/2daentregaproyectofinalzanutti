@@ -1,6 +1,5 @@
 const userStore = {
     usuario: JSON.parse(localStorage.getItem('usuario')) ?? null,
-    misPedidos: [],
 
     logearUsuario(usuario) {
         this.usuario = usuario
@@ -8,11 +7,16 @@ const userStore = {
     },
 
     cerrarSesion() {
+        localStorage.removeItem('usuario')
         this.usuario = null
     },
 
     agregarPedido(pedido) {
-        this.misPedidos.push(pedido)
+        this.usuario = {
+            ...this.usuario,
+            misPedidos: [...this.usuario.misPedidos, pedido]
+        }
+        console.log(this.usuario)
     }
 };
 

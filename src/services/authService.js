@@ -85,6 +85,7 @@ const registrar = async (username, password, passwordConfirm) => {
             username: username,
             password: password,
             isAdmin: false,
+            misPedidos: []
         };
         await axios
             .post("https://6495d71db08e17c91792c061.mockapi.io/users", usuario)

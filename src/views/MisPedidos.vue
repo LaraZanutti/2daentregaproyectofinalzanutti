@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     pedidos() {
-      return this.userStore.misPedidos;
+      return this.userStore.usuario.misPedidos;
     },
   },
 };
