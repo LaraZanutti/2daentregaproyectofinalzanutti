@@ -72,8 +72,8 @@ export default {
           timer: 2000,
           timerProgressBar: true,
           didOpen: (toast) => {
-            toast.addEventListener("mouseenter", this.$wal.stopTimer);
-            toast.addEventListener("mouseleave", this.$wal.resumeTimer);
+            toast.addEventListener("mouseenter", this.$swal.stopTimer);
+            toast.addEventListener("mouseleave", this.$swal.resumeTimer);
           },
         });
         Toast.fire({
