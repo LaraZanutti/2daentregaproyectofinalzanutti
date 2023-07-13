@@ -4,8 +4,6 @@ import store from "../store";
 
 Vue.use(VueRouter)
 
-const usuario = store.getters["userStore/getUsuario"]
-
 const router = new VueRouter({
   mode: 'history',
   base: import.meta.env.BASE_URL,
@@ -40,6 +38,7 @@ const router = new VueRouter({
       name: 'agregarProductos',
       component: () => import('../views/AgregarProductos.vue'),
       beforeEnter(to, from, next) {
+        const usuario = store.getters["userStore/getUsuario"]
         if (usuario && usuario.isAdmin) {
           next()
         } else {
@@ -57,6 +56,7 @@ const router = new VueRouter({
       name: 'editarProducto',
       component: () => import('../views/EditarProducto.vue'),
       beforeEnter(to, from, next) {
+        const usuario = store.getters["userStore/getUsuario"]
         if (usuario && usuario.isAdmin) {
           next()
         } else {
@@ -69,6 +69,7 @@ const router = new VueRouter({
       name: 'todosLosPedidos',
       component: () => import('../views/TodosLosPedidos.vue'),
       beforeEnter(to, from, next) {
+        const usuario = store.getters["userStore/getUsuario"]
         if (usuario && usuario.isAdmin) {
           next()
         } else {
