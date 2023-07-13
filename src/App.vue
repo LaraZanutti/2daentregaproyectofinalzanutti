@@ -3,7 +3,6 @@
     <header>
       <NavBar />
     </header>
-
     <router-view />
   </div>
 </template>
@@ -14,9 +13,6 @@ export default {
   name: "App",
   components: {
     NavBar,
-  },
-  data() {
-    return {};
   },
 };
 </script>

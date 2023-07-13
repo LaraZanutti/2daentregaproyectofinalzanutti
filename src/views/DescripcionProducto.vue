@@ -48,11 +48,10 @@
 
 <script>
 import axios from "axios";
-import productoStore from "../store/productoStore";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      productoStore: productoStore,
       producto: null,
       cantidadProducto: 0,
       loading: true,
@@ -62,14 +61,20 @@ export default {
     await this.fetchProduct();
   },
   methods: {
+    ...mapActions("productoStore", ["agregarProducto"]),
     async fetchProduct() {
       axios
         .get(
-          `https://6495d71db08e17c91792c061.mockapi.io/products/${this.$route.params.id}`
+          `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${
+            this.$route.params.id
+          }`
         )
         .then((res) => {
           this.producto = res.data;
           this.loading = false;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
     restarProducto() {
@@ -80,7 +85,7 @@ export default {
       this.cantidadProducto++;
     },
     agregarCarrito() {
-      productoStore.agregarProducto({
+      this.agregarProducto({
         id: this.producto.id,
         producto: this.producto.title,
         cantidad: this.cantidadProducto,

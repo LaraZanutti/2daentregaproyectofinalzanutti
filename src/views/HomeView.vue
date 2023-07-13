@@ -37,7 +37,7 @@ export default {
     traerProductos() {
       this.loading = true;
       axios
-        .get("https://6495d71db08e17c91792c061.mockapi.io/products")
+        .get(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS)
         .then((res) => {
           this.productos = res.data;
           this.loading = false;

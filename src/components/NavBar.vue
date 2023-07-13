@@ -13,9 +13,7 @@
           <b-nav-item>
             <b-button class="carrito" @click="irAlCarrito">
               <b-icon-cart4 />
-              <span class="cantidadProductos">{{
-                productoStore.productos.length
-              }}</span>
+              <span class="cantidadProductos">{{ getProductos.length }}</span>
             </b-button>
           </b-nav-item>
         </b-navbar-nav>
@@ -30,7 +28,7 @@
 
         <b-navbar-nav>
           <router-link to="/login">
-            <b-button class="button" v-if="!userStore.usuario">
+            <b-button class="button" v-if="!getUsuario">
               <b-icon-person-circle />&nbsp;Login</b-button
             ></router-link
           >
@@ -46,35 +44,37 @@
         >
           <div class="px-3 py-2 d-flex flex-column gap-4">
             <p class="lariz p-0 text-center">LariZtore</p>
-            <p class="bienvenido" v-if="userStore.usuario">
-              Bienvenido {{ userStore.usuario.username }}
+            <p class="bienvenido" v-if="getUsuario">
+              Bienvenido {{ getUsuario.username }}
             </p>
             <b-button
               variant="outline-success"
-              v-if="userStore.usuario?.isAdmin"
+              v-if="getUsuario?.isAdmin"
               @click="redirect('agregarProductos')"
               ><b-icon-plus-circle />&nbsp;Agregar producto</b-button
             >
             <b-button
-              v-if="!userStore.usuario?.isAdmin"
+              variant="outline-warning"
+              v-if="getUsuario?.isAdmin"
+              @click="redirect('todosLosPedidos')"
+              ><b-icon-list />&nbsp;Todos los pedidos</b-button
+            >
+            <b-button
+              v-if="!getUsuario?.isAdmin"
               class="button m-0"
               @click="redirect('misPedidos')"
               ><b-icon-card-list />&nbsp;Mis pedidos</b-button
             >
-            <b-button variant="outline-danger" @click="cerrarSesion"
+            <b-button variant="outline-danger" @click="cerrarSesionYRedirect"
               ><b-icon-door-open />&nbsp;Cerrar sesión</b-button
             >
           </div>
         </b-sidebar>
 
         <div>
-          <b-button
-            class="button"
-            v-b-toggle.sidebar-border
-            v-if="userStore.usuario"
-          >
+          <b-button class="button" v-b-toggle.sidebar-border v-if="getUsuario">
             <b-icon-person-bounding-box />&nbsp;
-            {{ userStore.usuario.username }}
+            {{ getUsuario.username }}
           </b-button>
         </div>
       </b-collapse>
@@ -83,22 +83,21 @@
 </template>
 
 <script>
-import productoStore from "../store/productoStore";
-import userStore from "../store/storeUser";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "NavBar",
-
-  props: {
-    usuarioLogeado: String,
-    productos: Array,
-  },
-  data() {
-    return {
-      productoStore: productoStore,
-      userStore: userStore,
-    };
+  computed: {
+    ...mapGetters("productoStore", ["getProductos"]),
+    ...mapGetters("userStore", ["getUsuario"]),
   },
   methods: {
+    ...mapActions("productoStore", [
+      "eliminarProducto",
+      "eliminarTodosLosProductos",
+    ]),
+
+    ...mapActions("userStore", ["cerrarSesion"]),
+
     irAlCarrito() {
       this.$router.push({
         name: "carrito",
@@ -109,8 +108,8 @@ export default {
       this.$emit("activarLogin");
     },
     //Emitir cerrarSesion al app.vue
-    cerrarSesion() {
-      this.userStore.cerrarSesion();
+    cerrarSesionYRedirect() {
+      this.cerrarSesion();
       this.$refs.sidebar.hide();
       if (this.$route.name !== "home") {
         this.$router.push({
@@ -121,23 +120,6 @@ export default {
     //Emitir eliminarTodo al app.vue
     eliminarTodo() {
       this.$emit("eliminarTodo");
-    },
-    //chimi
-    easterEgg() {
-      this.$swal.fire({
-        html: '<a style="font-size: 30px; color: pink;" href="https://github.com/LaraZanutti" target="_blank">https://github.com/LaraZanutti</a>',
-        width: 600,
-        padding: "3em",
-        showConfirmButton: false,
-        color: "#716add",
-        background: "#fff url(/images/trees.png)",
-        backdrop: `
-    rgba(0,0,123,0.4)
-    url("https://sweetalert2.github.io/images/nyan-cat.gif")
-    left top
-    no-repeat
-  `,
-      });
     },
     redirect(nombreRuta) {
       this.$router.push({

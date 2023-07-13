@@ -51,14 +51,14 @@
 
       <div class="botones">
         <router-link :to="`/editar-producto/${producto.id}`"
-          ><b-button class="brush" v-if="userStore.usuario?.isAdmin"
+          ><b-button class="brush" v-if="getUsuario?.isAdmin"
             ><b-icon-brush
           /></b-button>
         </router-link>
         <b-button
           class="trash"
           @click="eliminarProducto(producto.id)"
-          v-if="userStore.usuario?.isAdmin"
+          v-if="getUsuario?.isAdmin"
           ><b-icon-trash
         /></b-button>
       </div>
@@ -67,19 +67,24 @@
 </template>
 
 <script>
-import userStore from "../store/storeUser";
 import axios from "axios";
-import productoStore from "../store/productoStore";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "ProductoCard",
+  props: {
+    producto: Object,
+  },
   data() {
     return {
       cantidadProducto: 0,
-      userStore: userStore,
-      productoStore: productoStore,
     };
   },
+  computed: {
+    ...mapGetters("userStore", ["getUsuario"]),
+  },
   methods: {
+    ...mapActions("productoStore", ["agregarProducto"]),
+
     restarProducto() {
       if (this.cantidadProducto === 0) return;
       this.cantidadProducto--;
@@ -88,7 +93,7 @@ export default {
       this.cantidadProducto++;
     },
     agregarCarrito() {
-      productoStore.agregarProducto({
+      this.agregarProducto({
         id: this.producto.id,
         producto: this.producto.title,
         cantidad: this.cantidadProducto,
@@ -110,7 +115,7 @@ export default {
       });
       await axios
         .delete(
-          `https://6495d71db08e17c91792c061.mockapi.io/products/${id}`,
+          `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${id}`,
           this.form
         )
         .then(function () {
@@ -127,9 +132,6 @@ export default {
         });
       this.$emit("actualizarLista");
     },
-  },
-  props: {
-    producto: Object,
   },
 };
 </script>

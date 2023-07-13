@@ -82,7 +82,7 @@ export default {
         },
       });
       await axios
-        .post("https://6495d71db08e17c91792c061.mockapi.io/products", this.form)
+        .post(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS, this.form)
         .then(() => {
           toast.fire({
             icon: "success",

@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import userStore from "../store/storeUser"
+import store from "../store";
 
 Vue.use(VueRouter)
+
+const usuario = store.getters["userStore/getUsuario"]
 
 const router = new VueRouter({
   mode: 'history',
@@ -38,7 +40,7 @@ const router = new VueRouter({
       name: 'agregarProductos',
       component: () => import('../views/AgregarProductos.vue'),
       beforeEnter(to, from, next) {
-        if (userStore.usuario && userStore.usuario.isAdmin) {
+        if (usuario && usuario.isAdmin) {
           next()
         } else {
           router.push({ name: 'home' })
@@ -55,7 +57,19 @@ const router = new VueRouter({
       name: 'editarProducto',
       component: () => import('../views/EditarProducto.vue'),
       beforeEnter(to, from, next) {
-        if (userStore.usuario && userStore.usuario.isAdmin) {
+        if (usuario && usuario.isAdmin) {
+          next()
+        } else {
+          router.push({ name: 'home' })
+        }
+      }
+    },
+    {
+      path: '/todosLosPedidos',
+      name: 'todosLosPedidos',
+      component: () => import('../views/TodosLosPedidos.vue'),
+      beforeEnter(to, from, next) {
+        if (usuario && usuario.isAdmin) {
           next()
         } else {
           router.push({ name: 'home' })

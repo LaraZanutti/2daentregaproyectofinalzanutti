@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import storeUser from "../store/storeUser.js";
 import { login, registrar } from "../services/authService.js";
 export default {
   name: "LoginUsuario",
@@ -55,7 +54,6 @@ export default {
         passwordConfirm: "",
       },
       registro: false,
-      storeUser: storeUser,
     };
   },
   props: {

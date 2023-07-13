@@ -1,7 +1,7 @@
 import axios from "axios";
 import vue from 'vue'
-import userStore from "../store/storeUser"
 import router from "../router/index"
+import store from "../store";
 
 const Toast = vue.swal.mixin({
     toast: true,
@@ -17,7 +17,7 @@ const Toast = vue.swal.mixin({
 
 const login = async (username, password) => {
     await axios
-        .get("https://6495d71db08e17c91792c061.mockapi.io/users")
+        .get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
         .then((response) => {
             const usuarios = response.data;
 
@@ -33,7 +33,7 @@ const login = async (username, password) => {
                         icon: "success",
                         title: `Bienvenido ${usuarioEncontrado.username}`,
                     });
-                    userStore.logearUsuario(usuarioEncontrado);
+                    store.dispatch("userStore/logearUsuario", usuarioEncontrado)
                     router.push({ name: "home" });
                 } else {
                     //La contraseña es incorrecta
@@ -49,6 +49,9 @@ const login = async (username, password) => {
                     title: `Usuario o contraseña incorrecta`,
                 });
             }
+        })
+        .catch((err) => {
+            console.log(err);
         });
 }
 
@@ -65,10 +68,13 @@ const registrar = async (username, password, passwordConfirm) => {
     let usuariosExistentes = []
 
     await axios
-        .get("https://6495d71db08e17c91792c061.mockapi.io/users")
+        .get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
         .then((response) => {
             usuariosExistentes = response.data
         })
+        .catch((err) => {
+            console.log(err);
+        });
     const usuarioExiste = usuariosExistentes.find(usuario => usuario.username === username)
     if (usuarioExiste) {
         Toast.fire({
@@ -88,7 +94,7 @@ const registrar = async (username, password, passwordConfirm) => {
             misPedidos: []
         };
         await axios
-            .post("https://6495d71db08e17c91792c061.mockapi.io/users", usuario)
+            .post(import.meta.env.VITE_MOCKAPI_URL_USUARIOS, usuario)
             .then(function () {
                 Toast.fire({
                     icon: "success",

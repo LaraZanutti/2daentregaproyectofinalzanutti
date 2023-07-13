@@ -1,24 +1,30 @@
 <template>
   <div class="container">
-    <div class="carrito" v-if="productos.length > 0">
+    <div class="carrito" v-if="getProductos.length > 0">
       <div class="title">Carrito</div>
       <b-table
         class="table"
         borderer
         striped
         hover
-        :items="productos"
+        :items="getProductos"
         :fields="fields"
       >
         <template #cell(acciones)="data">
-          <b-button variant="danger" @click="eliminarProducto(data.item.id)">
+          <b-button
+            variant="danger"
+            @click="eliminarProductoCarrito(data.item.id)"
+          >
             <b-icon-trash />
           </b-button>
         </template>
       </b-table>
 
       <div class="botones">
-        <b-button variant="danger" class="eliminar" @click="eliminarProductos"
+        <b-button
+          variant="danger"
+          class="eliminar"
+          @click="eliminarTodosLosProductosCarrito"
           ><b-icon-cart-x />&nbsp;Eliminar productos</b-button
         >
         <b-button variant="success" class="finalizar" @click="pedidoFinalizado"
@@ -38,32 +44,49 @@
 </template>
 
 <script>
-import userStore from "../store/storeUser";
-import productoStore from "../store/productoStore";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
-      productoStore: productoStore,
-      userStore: userStore,
       fields: ["id", "producto", "cantidad", "precio", "subtotal", "acciones"],
     };
   },
-  methods: {
-    eliminarProducto(id) {
-      this.productoStore.eliminarProducto(id);
+  computed: {
+    ...mapGetters("productoStore", ["getProductos"]),
+    ...mapGetters("userStore", ["getUsuario"]),
+    //Se usa la computada para calcular el total
+    calcularTotal() {
+      let total = 0;
+      this.getProductos.forEach((producto) => {
+        total += producto.subtotal;
+      });
+      return total;
     },
-    eliminarProductos() {
-      this.productoStore.eliminarTodosLosProductos();
+    productosCarrito() {
+      return this.getProductos;
+    },
+  },
+  methods: {
+    ...mapActions("productoStore", [
+      "eliminarProducto",
+      "eliminarTodosLosProductos",
+    ]),
+
+    ...mapActions("userStore", ["agregarPedido"]),
+
+    eliminarProductoCarrito(id) {
+      this.eliminarProducto(id);
+    },
+    eliminarTodosLosProductosCarrito() {
+      this.eliminarTodosLosProductos();
     },
     pedidoFinalizado() {
-      if (this.userStore.usuario) {
+      if (this.getUsuario) {
         const pedido = {
-          productos: this.productos,
+          productos: this.getProductos,
           total: this.calcularTotal,
         };
-        this.userStore.agregarPedido(pedido);
-        this.eliminarProductos();
-        this.$router.push({ name: "misPedidos" });
+        this.agregarPedido(pedido);
       } else {
         const Toast = this.$swal.mixin({
           toast: true,
@@ -81,19 +104,6 @@ export default {
           title: `Debe estar logeado para finalizar una compra`,
         });
       }
-    },
-  },
-  computed: {
-    //Se usa la computada para calcular el total
-    calcularTotal() {
-      let total = 0;
-      this.productos.forEach((producto) => {
-        total += producto.subtotal;
-      });
-      return total;
-    },
-    productos() {
-      return this.productoStore.productos;
     },
   },
 };

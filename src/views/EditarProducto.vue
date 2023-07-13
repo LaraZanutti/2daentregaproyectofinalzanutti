@@ -85,7 +85,9 @@ export default {
     async fetchProduct() {
       axios
         .get(
-          `https://6495d71db08e17c91792c061.mockapi.io/products/${this.$route.params.id}`
+          `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${
+            this.$route.params.id
+          }`
         )
         .then((res) => {
           const producto = res.data;
@@ -94,6 +96,9 @@ export default {
           this.form.description = producto.description;
           this.form.price = producto.price;
           this.form.thumbnail = producto.thumbnail;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
     async editarProducto() {
@@ -110,7 +115,9 @@ export default {
       });
       await axios
         .put(
-          `https://6495d71db08e17c91792c061.mockapi.io/products/${this.$route.params.id}`,
+          `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${
+            this.$route.params.id
+          }`,
           this.form
         )
         .then(() => {
