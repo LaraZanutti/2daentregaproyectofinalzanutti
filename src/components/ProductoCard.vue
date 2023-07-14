@@ -1,13 +1,6 @@
 <template>
   <div>
-    <b-card
-      :title="producto.title"
-      :img-src="producto.thumbnail"
-      img-alt="Image"
-      img-top
-      tag="article"
-      class="mb-2 card"
-    >
+    <b-card :title="producto.title" :img-src="producto.thumbnail" img-alt="Image" img-top tag="article" class="mb-2 card">
       <b-card-text class="precio">
         {{ `$ ${producto.price}` }}
       </b-card-text>
@@ -15,59 +8,35 @@
       <div>
         <b-input-group class="mt-3">
           <b-input-group-prepend>
-            <b-button @click="restarProducto" variant="outline-danger"
-              ><b-icon-patch-minus
-            /></b-button>
+            <b-button @click="restarProducto" variant="outline-danger"><b-icon-patch-minus /></b-button>
           </b-input-group-prepend>
-          <b-form-input
-            class="text-center"
-            v-model="cantidadProducto"
-          ></b-form-input>
+          <b-form-input class="text-center" v-model="cantidadProducto"></b-form-input>
           <b-input-group-append>
-            <b-button @click="sumarProducto" variant="outline-success"
-              ><b-icon-patch-plus
-            /></b-button>
+            <b-button @click="sumarProducto" variant="outline-success"><b-icon-patch-plus /></b-button>
           </b-input-group-append>
         </b-input-group>
       </div>
-      <b-button
-        :disabled="cantidadProducto === 0"
-        class="mt-4"
-        @click="agregarCarrito"
-        variant="success"
-        >Agregar al carrito</b-button
-      >
+      <b-button :disabled="cantidadProducto === 0" class="mt-4" @click="agregarCarrito" variant="success">Agregar al
+        carrito</b-button>
 
       <div class="detalle">
-        <b-button
-          ><router-link
-            :to="`/descripcion-producto/${producto.id}`"
-            class="descripcion"
-          >
-            Ver descripción</router-link
-          ></b-button
-        >
+        <b-button><router-link :to="`/descripcion-producto/${producto.id}`" class="descripcion">
+            Ver descripción</router-link></b-button>
       </div>
 
       <div class="botones">
-        <router-link :to="`/editar-producto/${producto.id}`"
-          ><b-button class="brush" v-if="getUsuario?.isAdmin"
-            ><b-icon-brush
-          /></b-button>
+        <router-link :to="`/editar-producto/${producto.id}`"><b-button class="brush"
+            v-if="getUsuario?.isAdmin"><b-icon-brush /></b-button>
         </router-link>
-        <b-button
-          class="trash"
-          @click="eliminarProducto(producto.id)"
-          v-if="getUsuario?.isAdmin"
-          ><b-icon-trash
-        /></b-button>
+        <b-button class="trash" @click="eliminarProducto(producto.id)"
+          v-if="getUsuario?.isAdmin"><b-icon-trash /></b-button>
       </div>
     </b-card>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { deleteItem } from '../services/httpService'
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "ProductoCard",
@@ -113,21 +82,17 @@ export default {
           toast.addEventListener("mouseleave", this.$swal.resumeTimer);
         },
       });
-      await axios
-        .delete(
-          `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${id}`,
-          this.form
-        )
-        .then(function () {
+      await deleteItem(`${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${id}`, this.form)
+        .then(() => {
           toast.fire({
             icon: "success",
             title: `Producto eliminado`,
           });
         })
-        .catch(function (error) {
+        .catch((err) => {
           toast.fire({
             icon: "error",
-            title: error,
+            title: err,
           });
         });
       this.$emit("actualizarLista");
@@ -142,6 +107,7 @@ export default {
   font-weight: 600;
   margin-bottom: 25px;
 }
+
 .card {
   width: 300px;
   text-align: center;
@@ -180,6 +146,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .brush {
   margin-bottom: 10px;
   margin-top: 10px;

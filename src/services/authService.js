@@ -1,7 +1,7 @@
-import axios from "axios";
 import vue from 'vue'
 import router from "../router/index"
 import store from "../store";
+import { get, post } from '../services/httpService'
 
 const Toast = vue.swal.mixin({
     toast: true,
@@ -16,10 +16,9 @@ const Toast = vue.swal.mixin({
 });
 
 const login = async (username, password) => {
-    await axios
-        .get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
-        .then((response) => {
-            const usuarios = response.data;
+    await get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
+        .then((data) => {
+            const usuarios = data;
 
             //Buscar el usuario en el array de usuarios mediante el username
             const usuarioEncontrado = usuarios.find(
@@ -67,10 +66,9 @@ const registrar = async (username, password, passwordConfirm) => {
 
     let usuariosExistentes = []
 
-    await axios
-        .get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
-        .then((response) => {
-            usuariosExistentes = response.data
+    await get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
+        .then((data) => {
+            usuariosExistentes = data
         })
         .catch((err) => {
             console.log(err);
@@ -93,18 +91,17 @@ const registrar = async (username, password, passwordConfirm) => {
             isAdmin: false,
             misPedidos: []
         };
-        await axios
-            .post(import.meta.env.VITE_MOCKAPI_URL_USUARIOS, usuario)
-            .then(function () {
+        await post(import.meta.env.VITE_MOCKAPI_URL_USUARIOS, usuario)
+            .then(() => {
                 Toast.fire({
                     icon: "success",
                     title: `Usuario registrado`,
                 });
             })
-            .catch(function (error) {
+            .catch((err) => {
                 Toast.fire({
                     icon: "error",
-                    title: error,
+                    title: err,
                 });
             });
     } else {

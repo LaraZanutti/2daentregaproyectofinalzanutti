@@ -3,50 +3,20 @@
     <b-form-group label="Agregar producto" class="title"> </b-form-group>
 
     <b-card bg-variant="light" class="card">
-      <b-form-group
-        label="Titulo"
-        label-for="titulo"
-        label-cols-sm="3"
-        label-align-sm="right"
-      >
+      <b-form-group label="Titulo" label-for="titulo" label-cols-sm="3" label-align-sm="right">
         <b-form-input v-model="form.title" id="nested-street"></b-form-input>
       </b-form-group>
 
-      <b-form-group
-        label="Descripción"
-        label-for="descripcion"
-        label-cols-sm="3"
-        label-align-sm="right"
-      >
-        <b-form-input
-          v-model="form.description"
-          id="nested-city"
-        ></b-form-input>
+      <b-form-group label="Descripción" label-for="descripcion" label-cols-sm="3" label-align-sm="right">
+        <b-form-input v-model="form.description" id="nested-city"></b-form-input>
       </b-form-group>
 
-      <b-form-group
-        label="Precio"
-        label-for="precio"
-        label-cols-sm="3"
-        label-align-sm="right"
-      >
-        <b-form-input
-          v-model="form.price"
-          type="number"
-          id="nested-state"
-        ></b-form-input>
+      <b-form-group label="Precio" label-for="precio" label-cols-sm="3" label-align-sm="right">
+        <b-form-input v-model="form.price" type="number" id="nested-state"></b-form-input>
       </b-form-group>
 
-      <b-form-group
-        label="Link de imagen"
-        label-for="nested-country"
-        label-cols-sm="3"
-        label-align-sm="right"
-      >
-        <b-form-input
-          v-model="form.thumbnail"
-          id="nested-country"
-        ></b-form-input>
+      <b-form-group label="Link de imagen" label-for="nested-country" label-cols-sm="3" label-align-sm="right">
+        <b-form-input v-model="form.thumbnail" id="nested-country"></b-form-input>
       </b-form-group>
 
       <b-button @click="agregarNuevoProducto" class="button">Agregar</b-button>
@@ -55,7 +25,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { post } from '../services/httpService'
 export default {
   name: "AgregarProductos",
   data() {
@@ -81,8 +51,8 @@ export default {
           toast.addEventListener("mouseleave", this.$swal.resumeTimer);
         },
       });
-      await axios
-        .post(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS, this.form)
+
+      await post(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS, this.form)
         .then(() => {
           toast.fire({
             icon: "success",
@@ -90,10 +60,10 @@ export default {
           });
           this.$router.push({ name: "home" });
         })
-        .catch(function (error) {
+        .catch((err) => {
           toast.fire({
             icon: "error",
-            title: error,
+            title: err,
           });
         });
     },
@@ -109,6 +79,7 @@ export default {
   background: #c39cb4 !important;
   color: white !important;
 }
+
 .title {
   text-align: center;
   justify-content: center;

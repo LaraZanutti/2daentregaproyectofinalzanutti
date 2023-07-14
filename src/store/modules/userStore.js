@@ -1,5 +1,5 @@
-import axios from "axios";
 import router from "../../router";
+import { get, post } from '../../services/httpService'
 
 const userStore = {
     namespaced: true,
@@ -15,8 +15,8 @@ const userStore = {
             state.usuario = null
         },
 
-        async traerPedidosDeUsuario(state, response) {
-            const pedidos = response.data.filter(pedido => pedido.usuario.id === state.usuario.id)
+        async traerPedidosDeUsuario(state, data) {
+            const pedidos = data.filter(pedido => pedido.usuario.id === state.usuario.id)
             state.usuario = {
                 ...state.usuario,
                 misPedidos: pedidos
@@ -38,30 +38,25 @@ const userStore = {
                     username: state.usuario.username
                 }
             }
-
-            await axios
-                .post(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS, pedidoConUsuario)
+            await post(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS, pedidoConUsuario)
                 .then(() => {
                     router.push({ name: "misPedidos" });
                     commit("productoStore/eliminarTodosLosProductos", null, { root: true })
                 })
-                .catch((error) => {
-                    console.log(error)
+                .catch((err) => {
+                    console.log(err)
                     alert("hubo un error")
                 });
         },
         async traerPedidosDeUsuario({ commit }) {
-            await axios
-                .get(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS)
-                .then((response) => {
-                    commit('traerPedidosDeUsuario', response)
+            await get(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS)
+                .then((data) => {
+                    commit('traerPedidosDeUsuario', data)
                 })
-                .catch((error) => {
-                    console.log(error)
+                .catch((err) => {
+                    console.log(err)
                     alert("hubo un error")
                 });
-
-
         }
 
     },

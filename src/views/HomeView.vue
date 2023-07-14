@@ -1,22 +1,15 @@
 <template>
   <div>
-    <div
-      class="spinner d-flex justify-content-center mb-3 align-items-center"
-      v-if="loading"
-    >
+    <div class="spinner d-flex justify-content-center mb-3 align-items-center" v-if="loading">
       <b-spinner variant="light"></b-spinner>
     </div>
-    <ContainerProductos
-      :productos="productos"
-      @actualizarLista="traerProductos"
-      v-else
-    />
+    <ContainerProductos :productos="productos" @actualizarLista="traerProductos" v-else />
   </div>
 </template>
 
 <script>
 import ContainerProductos from "../components/ContainerProductos.vue";
-import axios from "axios";
+import { get } from '../services/httpService'
 
 export default {
   name: "HomeView",
@@ -34,18 +27,18 @@ export default {
     this.traerProductos();
   },
   methods: {
-    traerProductos() {
+
+    async traerProductos() {
       this.loading = true;
-      axios
-        .get(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS)
-        .then((res) => {
-          this.productos = res.data;
+      await get(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS)
+        .then((data) => {
+          this.productos = data;
           this.loading = false;
         })
         .catch((err) => {
           console.log(err);
         });
-    },
+    }
   },
 };
 </script>

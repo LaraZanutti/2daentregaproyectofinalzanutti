@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div
-      class="spinner d-flex justify-content-center mb-3 align-items-center"
-      v-if="loading"
-    >
+    <div class="spinner d-flex justify-content-center mb-3 align-items-center" v-if="loading">
       <b-spinner variant="light"></b-spinner>
     </div>
 
@@ -17,29 +14,17 @@
         <p class="price">$ {{ producto.price }}</p>
         <b-input-group class="mt-3">
           <b-input-group-prepend>
-            <b-button @click="restarProducto" variant="outline-danger"
-              ><b-icon-patch-minus
-            /></b-button>
+            <b-button @click="restarProducto" variant="outline-danger"><b-icon-patch-minus /></b-button>
           </b-input-group-prepend>
-          <b-form-input
-            class="text-center"
-            v-model="cantidadProducto"
-          ></b-form-input>
+          <b-form-input class="text-center" v-model="cantidadProducto"></b-form-input>
           <b-input-group-append>
-            <b-button @click="sumarProducto" variant="outline-success"
-              ><b-icon-patch-plus
-            /></b-button>
+            <b-button @click="sumarProducto" variant="outline-success"><b-icon-patch-plus /></b-button>
           </b-input-group-append>
         </b-input-group>
 
         <div class="agregar">
-          <b-button
-            :disabled="cantidadProducto === 0"
-            class="agregar"
-            @click="agregarCarrito"
-            variant="success"
-            >Agregar al carrito</b-button
-          >
+          <b-button :disabled="cantidadProducto === 0" class="agregar" @click="agregarCarrito" variant="success">Agregar
+            al carrito</b-button>
         </div>
       </div>
     </div>
@@ -47,7 +32,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { get } from '../services/httpService'
 import { mapActions } from "vuex";
 export default {
   data() {
@@ -63,14 +48,12 @@ export default {
   methods: {
     ...mapActions("productoStore", ["agregarProducto"]),
     async fetchProduct() {
-      axios
-        .get(
-          `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${
-            this.$route.params.id
-          }`
-        )
-        .then((res) => {
-          this.producto = res.data;
+      await get(
+        `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${this.$route.params.id
+        }`
+      )
+        .then((data) => {
+          this.producto = data;
           this.loading = false;
         })
         .catch((err) => {
@@ -106,10 +89,12 @@ export default {
     flex-direction: column;
   }
 }
+
 .container {
   height: 100vh;
   padding: 50px;
 }
+
 .product-detail {
   display: flex;
   flex-direction: row;

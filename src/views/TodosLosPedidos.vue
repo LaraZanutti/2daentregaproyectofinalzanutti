@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div
-      class="spinner d-flex justify-content-center align-center mt-3"
-      v-if="loading"
-    >
+    <div class="spinner d-flex justify-content-center align-center mt-3" v-if="loading">
       <b-spinner variant="light"></b-spinner>
     </div>
     <template v-else>
@@ -11,12 +8,7 @@
         <h3 class="pedidoTitle">
           Pedido N° {{ index + 1 }} de {{ pedido.usuario.username }}
         </h3>
-        <b-table
-          class="texto"
-          striped
-          hover
-          :items="pedido.productos"
-        ></b-table>
+        <b-table class="texto" striped hover :items="pedido.productos"></b-table>
         <b class="total">Total: $ {{ pedido.total }}</b>
         <hr v-if="index < pedidos.length - 1" class="w-100" />
       </div>
@@ -25,7 +17,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { get } from '../services/httpService'
 export default {
   data() {
     return {
@@ -39,10 +31,9 @@ export default {
   },
   methods: {
     async traerProductos() {
-      await axios
-        .get(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS)
-        .then((response) => {
-          this.pedidos = response.data;
+      await get(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS)
+        .then((data) => {
+          this.pedidos = data;
         })
         .catch((err) => {
           console.log(err);
@@ -61,6 +52,7 @@ export default {
   background: rgba(255, 255, 255, 0.75);
   flex-direction: column;
 }
+
 .container {
   margin-top: 50px;
   padding-bottom: 30px;
@@ -81,6 +73,7 @@ export default {
 .texto {
   font-weight: 600;
 }
+
 .total {
   color: green;
   font-size: 25px;
