@@ -1,28 +1,19 @@
 <template>
   <div class="container">
-    <div
-      class="spinner d-flex justify-content-center align-center w-100"
-      v-if="loading"
-    >
+    <div class="spinner d-flex justify-content-center align-center w-100" v-if="loading">
       <b-spinner variant="light"></b-spinner>
     </div>
     <div v-else-if="!pedidos.length">
       <div class="nohay">No hay pedidos</div>
       <div class="comprar">
-        <b-button variant="danger" @click="$router.push({ name: 'home' })"
-          >Comprar en la tienda</b-button
-        >
+        <b-button variant="danger" @click="$router.push({ name: 'home' }).catch(err => { })">Comprar en la
+          tienda</b-button>
       </div>
     </div>
     <template v-else>
       <div v-for="(pedido, index) in pedidos" :key="index" class="pedido">
         <h3 class="pedidoTitle">Pedido N° {{ index + 1 }}</h3>
-        <b-table
-          class="texto"
-          striped
-          hover
-          :items="pedido.productos"
-        ></b-table>
+        <b-table class="texto" striped hover :items="pedido.productos"></b-table>
         <b class="total">Total: $ {{ pedido.total }}</b>
         <hr v-if="index < pedidos.length - 1" class="w-100" />
       </div>
@@ -57,6 +48,7 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
 .pedido {
   display: flex;
   justify-content: center;
@@ -65,6 +57,7 @@ export default {
   background: rgba(255, 255, 255, 0.75);
   flex-direction: column;
 }
+
 .container {
   margin-top: 50px;
   padding-bottom: 30px;
@@ -85,6 +78,7 @@ export default {
 .texto {
   font-weight: 600;
 }
+
 .total {
   color: green;
   font-size: 25px;

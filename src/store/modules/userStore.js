@@ -40,7 +40,8 @@ const userStore = {
             }
             await post(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS, pedidoConUsuario)
                 .then(() => {
-                    router.push({ name: "misPedidos" });
+                    router.push({ name: "misPedidos" })
+                        .catch(err => { })
                     commit("productoStore/eliminarTodosLosProductos", null, { root: true })
                 })
                 .catch((err) => {

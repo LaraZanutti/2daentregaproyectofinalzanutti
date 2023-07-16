@@ -33,7 +33,8 @@ const login = async (username, password) => {
                         title: `Bienvenido ${usuarioEncontrado.username}`,
                     });
                     store.dispatch("userStore/logearUsuario", usuarioEncontrado)
-                    router.push({ name: "home" });
+                    router.push({ name: "home" })
+                        .catch(err => { })
                 } else {
                     //La contraseña es incorrecta
                     Toast.fire({

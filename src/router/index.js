@@ -43,6 +43,7 @@ const router = new VueRouter({
           next()
         } else {
           router.push({ name: 'home' })
+            .catch(err => { })
         }
       }
     },
@@ -61,6 +62,7 @@ const router = new VueRouter({
           next()
         } else {
           router.push({ name: 'home' })
+            .catch(err => { })
         }
       }
     },
@@ -74,6 +76,7 @@ const router = new VueRouter({
           next()
         } else {
           router.push({ name: 'home' })
+            .catch(err => { })
         }
       }
     },

@@ -2,10 +2,7 @@
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark">
       <b-navbar-brand>
-        <router-link to="/" class="lariz"
-          >LariZtore</router-link
-        ></b-navbar-brand
-      >
+        <router-link to="/" class="lariz">LariZtore</router-link></b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
       <b-collapse id="nav-collapse" class="justify-content-end p-3 ml-4" is-nav>
@@ -29,45 +26,23 @@
         <b-navbar-nav>
           <router-link to="/login">
             <b-button class="button" v-if="!getUsuario">
-              <b-icon-person-circle />&nbsp;Login</b-button
-            ></router-link
-          >
+              <b-icon-person-circle />&nbsp;Login</b-button></router-link>
         </b-navbar-nav>
 
-        <b-sidebar
-          ref="sidebar"
-          id="sidebar-border"
-          sidebar-class="border-right border-danger"
-          backdrop
-          shadow
-          right
-        >
+        <b-sidebar ref="sidebar" id="sidebar-border" sidebar-class="border-right border-danger" backdrop shadow right>
           <div class="px-3 py-2 d-flex flex-column gap-4">
             <p class="lariz p-0 text-center">LariZtore</p>
             <p class="bienvenido" v-if="getUsuario">
               Bienvenido {{ getUsuario.username }}
             </p>
-            <b-button
-              variant="outline-success"
-              v-if="getUsuario?.isAdmin"
-              @click="redirect('agregarProductos')"
-              ><b-icon-plus-circle />&nbsp;Agregar producto</b-button
-            >
-            <b-button
-              variant="outline-warning"
-              v-if="getUsuario?.isAdmin"
-              @click="redirect('todosLosPedidos')"
-              ><b-icon-list />&nbsp;Todos los pedidos</b-button
-            >
-            <b-button
-              v-if="!getUsuario?.isAdmin"
-              class="button m-0"
-              @click="redirect('misPedidos')"
-              ><b-icon-card-list />&nbsp;Mis pedidos</b-button
-            >
-            <b-button variant="outline-danger" @click="cerrarSesionYRedirect"
-              ><b-icon-door-open />&nbsp;Cerrar sesión</b-button
-            >
+            <b-button variant="outline-success" v-if="getUsuario?.isAdmin"
+              @click="redirect('agregarProductos')"><b-icon-plus-circle />&nbsp;Agregar producto</b-button>
+            <b-button variant="outline-warning" v-if="getUsuario?.isAdmin"
+              @click="redirect('todosLosPedidos')"><b-icon-list />&nbsp;Todos los pedidos</b-button>
+            <b-button v-if="!getUsuario?.isAdmin" class="button m-0"
+              @click="redirect('misPedidos')"><b-icon-card-list />&nbsp;Mis pedidos</b-button>
+            <b-button variant="outline-danger" @click="cerrarSesionYRedirect"><b-icon-door-open />&nbsp;Cerrar
+              sesión</b-button>
           </div>
         </b-sidebar>
 
@@ -101,7 +76,8 @@ export default {
     irAlCarrito() {
       this.$router.push({
         name: "carrito",
-      });
+      })
+        .catch(err => { })
     },
     //Emitir activarLogin al app.vue
     activarLogin() {
@@ -114,7 +90,7 @@ export default {
       if (this.$route.name !== "home") {
         this.$router.push({
           name: "home",
-        });
+        })
       }
     },
     //Emitir eliminarTodo al app.vue
@@ -124,7 +100,8 @@ export default {
     redirect(nombreRuta) {
       this.$router.push({
         name: nombreRuta,
-      });
+      })
+        .catch(err => { })
     },
   },
 };
@@ -132,18 +109,22 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
 a {
   text-decoration: none;
 }
+
 :deep .close {
   display: none !important;
 }
+
 .lariz {
   color: rgb(244, 147, 215);
   font-family: "Bebas Neue", sans-serif;
   font-size: 40px;
   padding-left: 20px;
 }
+
 .button {
   color: rgb(244, 147, 215);
   background: rgba(0, 0, 0, 0);
@@ -230,6 +211,7 @@ a {
   text-decoration: none;
   color: black;
 }
+
 .agregarProductos {
   text-decoration: none;
   color: black;

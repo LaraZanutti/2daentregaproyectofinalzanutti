@@ -76,7 +76,7 @@ export default {
             icon: "success",
             title: `Producto editado`,
           });
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "home" }).catch(err => { })
         })
         .catch((err) => {
           toast.fire({
@@ -86,7 +86,7 @@ export default {
         });
     },
     volverALaLista() {
-      this.$router.push({ name: "home" });
+      this.$router.push({ name: "home" }).catch(err => { })
     },
   },
 };

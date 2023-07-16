@@ -1,3 +1,4 @@
+import vue from "vue";
 const productoStore = {
     namespaced: true,
     state: {
@@ -5,10 +6,25 @@ const productoStore = {
     },
     mutations: {
         agregarProducto(state, producto) {
+            const toast = vue.swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", vue.swal.stopTimer);
+                    toast.addEventListener("mouseleave", vue.swal.resumeTimer);
+                },
+            });
             const indiceProducto = state.productos.findIndex(prod => prod.id === producto.id)
             if (indiceProducto !== -1) {
                 state.productos[indiceProducto].cantidad += producto.cantidad
             } else { state.productos.push(producto) };
+            toast.fire({
+                icon: "success",
+                title: `Agregaste ${producto.cantidad} ${producto.producto} al carrito`,
+            });
         },
 
         eliminarProducto(state, id) {

@@ -58,7 +58,7 @@ export default {
             icon: "success",
             title: `Producto agregado`,
           });
-          this.$router.push({ name: "home" });
+          this.$router.push({ name: "home" }).catch(err => { })
         })
         .catch((err) => {
           toast.fire({
