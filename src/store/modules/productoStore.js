@@ -20,6 +20,7 @@ const productoStore = {
             const indiceProducto = state.productos.findIndex(prod => prod.id === producto.id)
             if (indiceProducto !== -1) {
                 state.productos[indiceProducto].cantidad += producto.cantidad
+                state.productos[indiceProducto].subtotal += producto.subtotal
             } else { state.productos.push(producto) };
             toast.fire({
                 icon: "success",
