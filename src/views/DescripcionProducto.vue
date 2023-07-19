@@ -28,6 +28,9 @@
         </div>
       </div>
     </div>
+    <div class="d-flex w-100 justify-content-center mt-5">
+      <b-button class="arrow" variant="dark" @click="volverALaLista"> <b-icon-arrow-left-circle /></b-button>
+    </div>
   </div>
 </template>
 
@@ -48,8 +51,9 @@ export default {
   methods: {
     ...mapActions("productoStore", ["agregarProducto"]),
     async fetchProduct() {
+      const { VITE_MOCKAPI_URL_PRODUCTOS: productUrl } = import.meta.env
       await get(
-        `${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${this.$route.params.id
+        `${productUrl}/${this.$route.params.id
         }`
       )
         .then((data) => {
@@ -76,6 +80,9 @@ export default {
         subtotal: this.cantidadProducto * this.producto.price,
       });
     },
+    volverALaLista() {
+      this.$router.push({ name: "home" })
+    }
   },
 };
 </script>
@@ -146,5 +153,14 @@ export default {
   justify-content: center;
   align-items: center;
   display: flex;
+}
+
+.arrow {
+  display: flex;
+  flex-direction: column;
+  justify-content: column;
+  align-items: center;
+  width: 100px;
+  border-radius: 100px;
 }
 </style>

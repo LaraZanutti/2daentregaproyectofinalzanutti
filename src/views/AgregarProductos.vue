@@ -40,21 +40,10 @@ export default {
   },
   methods: {
     async agregarNuevoProducto() {
-      const toast = this.$swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", this.$swal.stopTimer);
-          toast.addEventListener("mouseleave", this.$swal.resumeTimer);
-        },
-      });
-
-      await post(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS, this.form)
+      const { VITE_MOCKAPI_URL_PRODUCTOS: productUrl } = import.meta.env
+      await post(productUrl, this.form)
         .then(() => {
-          toast.fire({
+          this.$toast.fire({
             icon: "success",
             title: `Producto agregado`,
           });

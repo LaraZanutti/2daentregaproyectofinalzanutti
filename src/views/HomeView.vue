@@ -30,7 +30,8 @@ export default {
 
     async traerProductos() {
       this.loading = true;
-      await get(import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS)
+      const { VITE_MOCKAPI_URL_PRODUCTOS: productUrl } = import.meta.env
+      await get(productUrl)
         .then((data) => {
           this.productos = data;
           this.loading = false;

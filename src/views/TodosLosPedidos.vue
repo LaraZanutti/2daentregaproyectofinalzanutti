@@ -31,7 +31,8 @@ export default {
   },
   methods: {
     async traerProductos() {
-      await get(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS)
+      const { VITE_MOCKAPI_URL_PEDIDOS: pedidosUrl } = import.meta.env
+      await get(pedidosUrl)
         .then((data) => {
           this.pedidos = data;
         })

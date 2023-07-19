@@ -1,22 +1,12 @@
-import vue from 'vue'
 import router from "../router/index"
 import store from "../store";
 import { get, post } from '../services/httpService'
+import vue from "vue";
 
-const Toast = vue.swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.addEventListener("mouseenter", vue.swal.stopTimer);
-        toast.addEventListener("mouseleave", vue.swal.resumeTimer);
-    },
-});
+const { VITE_MOCKAPI_URL_USUARIOS: userUrl } = import.meta.env
 
 const login = async (username, password) => {
-    await get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
+    await get(userUrl)
         .then((data) => {
             const usuarios = data;
 
@@ -28,7 +18,7 @@ const login = async (username, password) => {
             //Si el usuario existe, comprobar si la contraseña es la correcta
             if (usuarioEncontrado) {
                 if (usuarioEncontrado.password === password) {
-                    Toast.fire({
+                    vue.prototype.$toast.fire({
                         icon: "success",
                         title: `Bienvenido ${usuarioEncontrado.username}`,
                     });
@@ -37,14 +27,14 @@ const login = async (username, password) => {
                         .catch(err => { })
                 } else {
                     //La contraseña es incorrecta
-                    Toast.fire({
+                    vue.prototype.$toast.fire({
                         icon: "error",
                         title: `Usuario o contraseña incorrecta`,
                     });
                 }
             } else {
                 //El usuario no existe
-                Toast.fire({
+                vue.prototype.$toast.fire({
                     icon: "error",
                     title: `Usuario o contraseña incorrecta`,
                 });
@@ -59,7 +49,7 @@ const login = async (username, password) => {
 const registrar = async (username, password, passwordConfirm) => {
 
     if (username.length < 1) {
-        Toast.fire({
+        vue.prototype.$toast.fire({
             icon: "error",
             title: `Usuario o contraseña incorrecta`,
         }); return
@@ -67,7 +57,7 @@ const registrar = async (username, password, passwordConfirm) => {
 
     let usuariosExistentes = []
 
-    await get(import.meta.env.VITE_MOCKAPI_URL_USUARIOS)
+    await get(userUrl)
         .then((data) => {
             usuariosExistentes = data
         })
@@ -76,7 +66,7 @@ const registrar = async (username, password, passwordConfirm) => {
         });
     const usuarioExiste = usuariosExistentes.find(usuario => usuario.username === username)
     if (usuarioExiste) {
-        Toast.fire({
+        vue.prototype.$toast.fire({
             icon: "error",
             title: `Este usuario ya existe`
         })
@@ -92,21 +82,21 @@ const registrar = async (username, password, passwordConfirm) => {
             isAdmin: false,
             misPedidos: []
         };
-        await post(import.meta.env.VITE_MOCKAPI_URL_USUARIOS, usuario)
+        await post(userUrl, usuario)
             .then(() => {
-                Toast.fire({
+                vue.prototype.$toast.fire({
                     icon: "success",
                     title: `Usuario registrado`,
                 });
             })
             .catch((err) => {
-                Toast.fire({
+                vue.prototype.$toast.fire({
                     icon: "error",
                     title: err,
                 });
             });
     } else {
-        Toast.fire({
+        vue.prototype.$toast.fire({
             icon: "error",
             title: `"Las contraseñas no coinciden"`,
         });

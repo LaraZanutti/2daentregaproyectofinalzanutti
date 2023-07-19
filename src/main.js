@@ -7,11 +7,14 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import router from './router'
 import store from './store'
+import ToastPlugin from './plugins/toastPlugin'
+
 
 Vue.config.productionTip = false
 Vue.use(VueSweetalert2);
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(ToastPlugin)
 
 new Vue({
   router,

@@ -1,6 +1,8 @@
 import router from "../../router";
 import { get, post } from '../../services/httpService'
 
+const { VITE_MOCKAPI_URL_PEDIDOS: pedidosUrl } = import.meta.env
+
 const userStore = {
     namespaced: true,
     state: {
@@ -38,7 +40,7 @@ const userStore = {
                     username: state.usuario.username
                 }
             }
-            await post(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS, pedidoConUsuario)
+            await post(pedidosUrl, pedidoConUsuario)
                 .then(() => {
                     router.push({ name: "misPedidos" })
                         .catch(err => { })
@@ -50,7 +52,7 @@ const userStore = {
                 });
         },
         async traerPedidosDeUsuario({ commit }) {
-            await get(import.meta.env.VITE_MOCKAPI_URL_PEDIDOS)
+            await get(pedidosUrl)
                 .then((data) => {
                     commit('traerPedidosDeUsuario', data)
                 })

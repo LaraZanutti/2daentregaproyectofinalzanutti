@@ -65,26 +65,15 @@ export default {
       this.agregarProducto({
         id: this.producto.id,
         producto: this.producto.title,
-        cantidad: this.cantidadProducto,
         precio: this.producto.price,
-        subtotal: this.cantidadProducto * this.producto.price,
+        cantidad: this.cantidadProducto
       });
     },
     async eliminarProducto(id) {
-      const toast = this.$swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", this.$swal.stopTimer);
-          toast.addEventListener("mouseleave", this.$swal.resumeTimer);
-        },
-      });
-      await deleteItem(`${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${id}`, this.form)
+      const { VITE_MOCKAPI_URL_PRODUCTOS: productoUrl } = import.meta.env
+      await deleteItem(`${productoUrl}/${id}`, this.form)
         .then(() => {
-          toast.fire({
+          this.$toast.fire({
             icon: "success",
             title: `Producto eliminado`,
           });

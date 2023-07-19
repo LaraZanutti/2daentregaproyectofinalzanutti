@@ -45,7 +45,8 @@ export default {
   },
   methods: {
     async fetchProduct() {
-      await get(`${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${this.$route.params.id}`)
+      const { VITE_MOCKAPI_URL_PRODUCTOS: productUrl } = import.meta.env
+      await get(`${productUrl}/${this.$route.params.id}`)
         .then((data) => {
           const producto = data;
 
@@ -59,18 +60,8 @@ export default {
         });
     },
     async editarProducto() {
-      const toast = this.$swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", this.$swal.stopTimer);
-          toast.addEventListener("mouseleave", this.$swal.resumeTimer);
-        },
-      });
-      await put(`${import.meta.env.VITE_MOCKAPI_URL_PRODUCTOS}/${this.$route.params.id}`, this.form)
+      const { VITE_MOCKAPI_URL_PRODUCTOS: productUrl } = import.meta.env
+      await put(`${productUrl}/${this.$route.params.id}`, this.form)
         .then(() => {
           toast.fire({
             icon: "success",
@@ -79,7 +70,7 @@ export default {
           this.$router.push({ name: "home" }).catch(err => { })
         })
         .catch((err) => {
-          toast.fire({
+          this.$toast.fire({
             icon: "error",
             title: err,
           });
