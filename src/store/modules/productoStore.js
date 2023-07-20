@@ -5,6 +5,26 @@ const productoStore = {
     state: {
         productos: [],
     },
+    getters: {
+        getProductos(state) {
+            return state.productos
+        },
+        getProductoById: (state) => (id) => {
+            return state.productos.find(producto => producto.id === id)
+        },
+        getSubtotalProducto: (state) => (id) => {
+            return state.productos.find(producto => producto.id === id).subtotal
+        },
+        getIndexProducto: (state) => (id) => {
+            return state.productos.findIndex(producto => producto.id === id)
+        },
+        getTotal(state) {
+            const total = state.productos.reduce((total, producto) => {
+                return total + producto.subtotal
+            }, 0)
+            return total
+        }
+    },
     mutations: {
         agregarProducto(state, producto) {
             state.productos.push(producto)
@@ -49,17 +69,17 @@ const productoStore = {
                 });
             }
         },
-        actualizarProducto({ commit, getters }, params) {
-            const index = getters.getIndexProducto(params.producto.id)
+        actualizarProducto({ commit, getters }, payload) {
+            const index = getters.getIndexProducto(payload.producto.id)
             const productoActualizado = {
-                ...params.producto,
-                cantidad: params.cantidadNueva,
-                subtotal: params.subtotal
+                ...payload.producto,
+                cantidad: payload.cantidadNueva,
+                subtotal: payload.subtotal
             }
             commit('actualizarProducto', { productoActualizado, index })
             vue.prototype.$toast.fire({
                 icon: "success",
-                title: `Tiene un total de ${params.cantidadNueva} ${params.producto.producto} en el carrito`,
+                title: `Tiene un total de ${payload.cantidadNueva} ${payload.producto.producto} en el carrito`,
             });
         },
         eliminarProducto({ commit }, id) {
@@ -85,27 +105,6 @@ const productoStore = {
             dispatch("actualizarProducto", { producto, cantidadNueva, subtotal })
         }
 
-    },
-    getters: {
-        getProductos(state) {
-            return state.productos
-        },
-        getProductoById: (state) => (id) => {
-            return state.productos.find(producto => producto.id === id)
-        },
-        getSubtotalProducto: (state) => (id) => {
-            return state.productos.find(producto => producto.id === id).subtotal
-        },
-        getIndexProducto: (state) => (id) => {
-            return state.productos.findIndex(producto => producto.id === id)
-        },
-        getTotal(state) {
-            let total = 0
-            state.productos.forEach((producto) => {
-                total += producto.subtotal;
-            })
-            return total
-        }
     },
 };
 

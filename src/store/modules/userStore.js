@@ -8,6 +8,11 @@ const userStore = {
     state: {
         usuario: null
     },
+    getters: {
+        getUsuario(state) {
+            return state.usuario
+        }
+    },
     mutations: {
         logearUsuario(state, usuario) {
             state.usuario = usuario
@@ -63,11 +68,6 @@ const userStore = {
         }
 
     },
-    getters: {
-        getUsuario(state) {
-            return state.usuario
-        }
-    }
 };
 
 export default userStore
