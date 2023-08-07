@@ -1,4 +1,4 @@
-# 2da-entrega-zanutti
+# Proyecto Final Vue2 Zanutti Lara
 
 ## Instalar dependencias
 

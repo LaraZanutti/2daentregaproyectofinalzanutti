@@ -17,7 +17,9 @@
 </template>
 
 <script>
-import { get } from '../services/httpService'
+
+import { traerPedidos } from "../services/pedidosService"
+
 export default {
   data() {
     return {
@@ -26,21 +28,9 @@ export default {
     };
   },
   async created() {
-    await this.traerProductos();
+    this.pedidos = await traerPedidos();
     this.loading = false;
-  },
-  methods: {
-    async traerProductos() {
-      const { VITE_MOCKAPI_URL_PEDIDOS: pedidosUrl } = import.meta.env
-      await get(pedidosUrl)
-        .then((data) => {
-          this.pedidos = data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-  },
+  }
 };
 </script>
 

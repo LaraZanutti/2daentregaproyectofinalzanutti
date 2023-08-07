@@ -63,17 +63,16 @@ export default {
       const { VITE_MOCKAPI_URL_PRODUCTOS: productUrl } = import.meta.env
       await put(`${productUrl}/${this.$route.params.id}`, this.form)
         .then(() => {
-          toast.fire({
+          this.$toast.fire({
             icon: "success",
             title: `Producto editado`,
           });
-          this.$router.push({ name: "home" }).catch(err => { })
-        })
-        .catch((err) => {
-          this.$toast.fire({
-            icon: "error",
-            title: err,
-          });
+          this.$router.push({ name: "home" }).catch((err) => {
+            this.$toast.fire({
+              icon: "error",
+              title: err,
+            })
+          })
         });
     },
     volverALaLista() {

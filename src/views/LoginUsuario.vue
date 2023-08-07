@@ -3,39 +3,32 @@
     <div class="cuadrado">
       <span class="tituloLogin">{{ registro ? "registrarme" : "login" }}</span>
       <b-form>
-        <b-form-input
-          class="mb-3"
-          id="username"
-          v-model="form.username"
-          type="text"
-          placeholder="Enter user"
-          required
-        ></b-form-input>
-        <b-form-input
-          class="mb-3"
-          id="password"
-          v-model="form.password"
-          type="password"
-          placeholder="Enter password"
-          required
-        ></b-form-input>
-        <b-form-input
-          v-if="registro"
-          id="passwordConfirm"
-          v-model="form.passwordConfirm"
-          type="password"
-          placeholder="Password confirmation"
-          required
-        ></b-form-input>
+        <b-form-input class="mb-3" id="username" v-model="form.username" type="text"
+          placeholder="Ingrese nombre de usuario" :state="registro ? validation : Boolean(form.username.length)"
+          required></b-form-input>
+        <b-form-input class="mb-3" id="password" v-model="form.password" type="password" placeholder="Ingrese contraseña"
+          :state="registro ? validationPassword : Boolean(form.password.length)" required></b-form-input>
+        <b-form-input v-if="registro" id="passwordConfirm" v-model="form.passwordConfirm" type="password"
+          :state="validationPasswordIguales" placeholder="Contraseña de confirmación" required></b-form-input>
+        <b-tooltip v-if="registro" target="username" triggers="focus" variant="info" placement="right">
+          El usuario debe tener de 4 a 13 carácteres
+        </b-tooltip>
+        <b-tooltip v-if="registro" target="password" triggers="focus" variant="info" placement="right">
+          La contraseña debe tener 6 carácteres, por lo menos 1 número y no puede contener símbolos
+        </b-tooltip>
+        <b-tooltip v-if="registro" target="passwordConfirm" triggers="focus" variant="info" placement="right">
+          Las contraseñas tienen que ser iguales
+        </b-tooltip>
       </b-form>
-      <b-button @enter="authHandler" @click="authHandler" class="ingresar">{{
-        registro ? "Registrarme" : "Ingresar"
-      }}</b-button>
+      <b-button @enter="authHandler" @click="authHandler" :disabled="registro ? hayErrorRegistro : hayErrorLogin"
+        class="ingresar">{{
+          registro ? "Registrarme" : "Ingresar"
+        }}</b-button>
       <p class="registrate" @click="cambiarVista">
         {{
           registro
-            ? "¿Ya tenés usuario? Ingresa"
-            : "¿Todavía no sos usuario? Registrate"
+          ? "¿Ya tenés usuario? Ingresa"
+          : "¿Todavía no sos usuario? Registrate"
         }}
       </p>
     </div>
@@ -56,10 +49,31 @@ export default {
       registro: false,
     };
   },
-  props: {
-    errorDesdeLogin: String,
+  computed: {
+
+    validation() {
+      return this.form.username.length > 4 && this.form.username.length < 13
+    },
+    validationPassword() {
+      const numberRegex = /^(?=.*[0-9])(?=.*[a-zA-Z]).{6,}$/;
+      return numberRegex.test(this.form.password);
+    },
+    validationPasswordIguales() {
+      return Boolean(this.form.password.length) && this.form.password === this.form.passwordConfirm
+    },
+    hayErrorRegistro() {
+      return (
+        !this.validation ||
+        !this.validationPassword ||
+        !this.validationPasswordIguales
+      )
+    },
+    hayErrorLogin() {
+      return !this.form.username.length || !this.form.password.length
+    }
   },
   methods: {
+
     login,
     registrar,
     authHandler() {
@@ -93,16 +107,15 @@ export default {
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
 .login {
   height: 100vh;
-  background-image: linear-gradient(
-    to bottom,
-    #f493d7,
-    #b56b97,
-    #77475e,
-    #3d262f,
-    #000000
-  );
+  background-image: linear-gradient(to bottom,
+      #f493d7,
+      #b56b97,
+      #77475e,
+      #3d262f,
+      #000000);
 }
 
 .tituloLogin {

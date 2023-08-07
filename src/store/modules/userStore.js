@@ -1,7 +1,4 @@
-import router from "../../router";
-import { get, post } from '../../services/httpService'
-
-const { VITE_MOCKAPI_URL_PEDIDOS: pedidosUrl } = import.meta.env
+import { traerPedidos, guardarPedido } from '../../services/pedidosService'
 
 const userStore = {
     namespaced: true,
@@ -34,10 +31,11 @@ const userStore = {
         logearUsuario({ commit }, usuario) {
             commit('logearUsuario', usuario)
         },
-        cerrarSesion({ commit }) {
+        cerrarSesion({ commit, dispatch }) {
+            dispatch('productoStore/eliminarTodosLosProductos', null, { root: true })
             commit('cerrarSesion')
         },
-        async agregarPedido({ commit, state }, pedido) {
+        async agregarPedido({ state }, pedido) {
             const pedidoConUsuario = {
                 ...pedido,
                 usuario: {
@@ -45,26 +43,12 @@ const userStore = {
                     username: state.usuario.username
                 }
             }
-            await post(pedidosUrl, pedidoConUsuario)
-                .then(() => {
-                    router.push({ name: "misPedidos" })
-                        .catch(err => { })
-                    commit("productoStore/eliminarTodosLosProductos", null, { root: true })
-                })
-                .catch((err) => {
-                    console.log(err)
-                    alert("hubo un error")
-                });
+            await guardarPedido(pedidoConUsuario)
+
         },
         async traerPedidosDeUsuario({ commit }) {
-            await get(pedidosUrl)
-                .then((data) => {
-                    commit('traerPedidosDeUsuario', data)
-                })
-                .catch((err) => {
-                    console.log(err)
-                    alert("hubo un error")
-                });
+            const pedidos = await traerPedidos()
+            commit('traerPedidosDeUsuario', pedidos)
         }
 
     },
